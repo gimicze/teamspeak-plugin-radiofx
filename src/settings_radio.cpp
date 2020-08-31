@@ -62,17 +62,24 @@ void SettingsRadio::Init(Radio *radio)
     for (int i = 0; i < kStringList.size(); ++i)
     {
         auto name = kStringList.at(i);
+	float low_freq = 300.0f;
+	float high_freq = 3000.0f;
+	float fudge = 2.0f;
+	float rm_mod_freq = 0.0f;
+	float rm_mix = 0.0f;
         cfg.beginGroup(name);
         if (name == "HomeTab")
             name = "Home";
+	    low_freq = 701.0f;
+	    rm_mod_freq = 500.0f;
 
-        radio->setChannelStripEnabled(name, cfg.value("enabled", false).toBool());
-        radio->setInLoFreq(name, cfg.value("low_freq", 300.0f).toDouble());
-        radio->setInHiFreq(name, cfg.value("high_freq", 3000.0f).toDouble());
-        radio->setFudge(name, cfg.value("fudge", 2.0f).toDouble());
+        radio->setChannelStripEnabled(name, cfg.value("enabled", true).toBool());
+        radio->setInLoFreq(name, cfg.value("low_freq", low_freq).toDouble());
+        radio->setInHiFreq(name, cfg.value("high_freq", high_freq).toDouble());
+        radio->setFudge(name, cfg.value("fudge", fudge).toDouble());
         cfg.beginGroup("RingMod");
-        radio->setRingModFrequency(name, cfg.value("rm_mod_freq", 0.0f).toDouble());
-        radio->setRingModMix(name, cfg.value("rm_mix", 0.0f).toDouble());
+        radio->setRingModFrequency(name, cfg.value("rm_mod_freq", rm_mod_freq).toDouble());
+        radio->setRingModMix(name, cfg.value("rm_mix", rm_mix).toDouble());
         cfg.endGroup();
         radio->setOutLoFreq(name, cfg.value("o_freq_lo", 300.0f).toDouble());
         radio->setOutHiFreq(name, cfg.value("o_freq_hi", 3000.0f).toDouble());
